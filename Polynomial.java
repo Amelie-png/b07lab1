@@ -40,52 +40,6 @@ public class Polynomial {
         }
     }
 
-    private int[] mergeArray(int[] a, int[] b){
-        int[] temp = new int[a.length + b.length];
-        int k;
-        for(k = 0; k < a.length; k++){
-            temp[k] = a[k];
-        }
-        for(int j = 0; j < b.length; j++){
-            temp[k+j] = b[j];
-        }
-        Arrays.sort(temp);
-        int[] uniq = new int[temp.length];
-        uniq[0] = temp[0];
-        int uniqInd = 1;
-        for(int i = 1; i < temp.length; i++){
-            if(temp[i] != temp[i-1]){
-                uniq[uniqInd] = temp[i];
-                uniqInd++;
-            }
-        }
-
-        int[] result = new int[uniqInd];
-        System.arraycopy(uniq, 0 , result, 0, uniqInd);
-        return result;
-    }
-
-    public Polynomial add(Polynomial obj){
-        int[] sumExp = mergeArray(exp, obj.exp);
-        double[] sumCoeff = new double[sumExp.length];
-
-        for(int i = 0; i < sumExp.length; i++){
-            for(int j = 0; j < exp.length; j++){
-                if(exp[j] == sumExp[i]){
-                    sumCoeff[i] += coeff[j];
-                }
-            }
-            for(int j = 0; j < obj.exp.length; j++){
-                if(obj.exp[j] == sumExp[i]){
-                    sumCoeff[i] += obj.coeff[j];
-                }
-            }
-        }
-
-        Polynomial p = new Polynomial(sumCoeff, sumExp);
-        return p;
-    }
-
     private int findMax(int[] arr){
         int max = 0;
         for(int i = 0; i < arr.length; i++){
@@ -96,8 +50,45 @@ public class Polynomial {
         return max;
     }
 
+    public Polynomial add(Polynomial obj){
+        int arrLen = (findMax(exp) > findMax(obj.exp)) ? findMax(exp) + 1 : findMax(obj.exp) + 1;
+        double[] tempCoeff = new double[arrLen];
+        int count = 0;
+
+        for(int i = 0; i < arrLen; i++){
+            for(int j = 0; j < exp.length; j++){
+                if(exp[j] == i){
+                    tempCoeff[i] += coeff[j];
+                }
+            }
+            for(int j = 0; j < obj.exp.length; j++){
+                if(obj.exp[j] == i){
+                    tempCoeff[i] += obj.coeff[j];
+                }
+            }
+            if(tempCoeff[i] != 0){
+                count++;
+            }
+        }
+
+        int[] sumExp = new int[count];
+        double[] sumCoeff = new double[count];
+
+        count = 0;
+
+        for(int i = 0; i < arrLen; i++){
+            if(tempCoeff[i] != 0){
+                sumExp[count] = i;
+                sumCoeff[count] = tempCoeff[i];
+                count++;
+            }
+        }
+
+        Polynomial p = new Polynomial(sumCoeff, sumExp);
+        return p;
+    }
+
     public Polynomial multiply(Polynomial obj){
-        //int[] proExp = new int[findMax(obj.exp) + findMax(exp)];
         double[] tempCoeff = new double[findMax(obj.exp) + findMax(exp) + 1];
 
         for(int i = 0; i < exp.length; i++){

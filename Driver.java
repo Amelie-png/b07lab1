@@ -31,6 +31,7 @@ public class Driver {
         Polynomial t1 = new Polynomial(f1);
         Polynomial t2 = new Polynomial(f2);
         Polynomial t3 = new Polynomial(f3);
+        Polynomial s2 = t2.add(t3);
         t1.saveToFile("poly.txt");
         Scanner input = null;
         try {
@@ -45,6 +46,12 @@ public class Driver {
         }
         System.out.println(input.next());
         t3.saveToFile("poly.txt");
+        try {
+            input = new Scanner(new File("poly.txt"));
+        } catch (FileNotFoundException e) {
+        }
+        System.out.println(input.next());
+        s2.saveToFile("poly.txt");
         try {
             input = new Scanner(new File("poly.txt"));
         } catch (FileNotFoundException e) {
